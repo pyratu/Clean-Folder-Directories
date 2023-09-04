@@ -4,6 +4,7 @@ Desktop Cleaner is the solution to declutter your desktop. This C# script sweeps
 ## 🎮Todo
 - Ignore specified files
 - Ignore my computer, my documents etc.
+- Add total files size and file count.
 ## 🔧 How It Works
 1) Script scans your desktop for scattered files.
 2) It creates folders named after each file extension.
