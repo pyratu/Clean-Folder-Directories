@@ -1,12 +1,15 @@
-﻿
-string path = @"C:\Users\paul_\Desktop";
+﻿string path = @"C:\Users\paul_\Desktop";
 string[] files = Directory.GetFiles(path);
 List<string> fileExtension = new List<string>();
+decimal totalSize = 0;
 
 //takes every file name from desktop files, gets the extension only (ex: ".torrent"), creates folders with file extension name
 //and copy file to specified extension folder
 foreach (string file in files)
 {
+    FileInfo fileInfo = new FileInfo(file);
+    totalSize = totalSize + fileInfo.Length;
+
     string str = file.Replace(path + @"\", "");
     AddToList(str, str.Length);
 
@@ -39,7 +42,6 @@ void AddToList(string input, int nameLength)
     }
 }
 
-
 //returns extension -> .torrent
 string GetToThePoint(string input)
 {
@@ -54,10 +56,11 @@ string GetToThePoint(string input)
     return returnString;
 }
 
-
+decimal sizeMB = totalSize / 1000 / 1000;
+decimal sizeGB = totalSize / (1024 * 1024 * 1024);
+Console.WriteLine("Total size: "+ sizeMB.ToString("0.00") +" MB" + "\n\tOR\n" + "Total size: "+ sizeGB.ToString("0.00") +" GB\n");
 //testing
 fileExtension.Sort();
 
 foreach (var file in fileExtension)
     Console.WriteLine(file);
-
