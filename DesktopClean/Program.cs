@@ -1,41 +1,63 @@
-﻿string path = @"C:\Users\paul_\Desktop";
-
+﻿
+string path = @"C:\Users\paul_\Desktop";
 string[] files = Directory.GetFiles(path);
-
 List<string> fileExtension = new List<string>();
 
-//takes every file name from desktop files, replaces the prefix(c/users/etc to ""), creates folders with file extension name
+//takes every file name from desktop files, gets the extension only (ex: ".torrent"), creates folders with file extension name
+//and copy file to specified extension folder
 foreach (string file in files)
 {
+    string str = file.Replace(path + @"\", "");
+    AddToList(str, str.Length);
 
-    string str = file.Replace(path+@"\", "");
+    string dir = @$"C:\New folder\{fileExtension.Last()}_Files";
+    
+    //checks if directory exists at specified path, if not create new directory
+    if (!Directory.Exists(dir))
+        Directory.CreateDirectory(dir);
+
+    //checks if file exists at the specified path, if not copy the file
+    if(!File.Exists(dir + "\\" + str))
+        File.Copy(file, dir +"\\"+str);
+}
+
+// method that adds extensions (.torrent) to a list
+void AddToList(string input, int nameLength)
+{
     string wordToAdd = string.Empty;
-    if(str.Length > 3)
+    if (nameLength > 3)
     {
-        wordToAdd = $"{str[str.Length - 3]}{str[str.Length - 2]}{str[str.Length - 1]}";
+        wordToAdd = GetToThePoint(input);
         wordToAdd = wordToAdd.Replace(".", "");
         fileExtension.Add(wordToAdd);
     }
     else
     {
-        wordToAdd = str;
+        wordToAdd = GetToThePoint(input);
         wordToAdd = wordToAdd.Replace(".", "");
         fileExtension.Add(wordToAdd);
     }
-
-    //creates directory to move files, check if file exist if not -> copy file to dir
-    string dir = @$"C:\New folder\{fileExtension.Last()}_Files";
-    
-    if (!Directory.Exists(dir))
-    {
-        Directory.CreateDirectory(dir);
-    }
-    if(!File.Exists(dir + "\\" + str))
-        File.Copy(file, dir +"\\"+str);
 }
 
 
+//returns extension -> .torrent
+string GetToThePoint(string input)
+{
+    var index = input.LastIndexOf('.');
+    string returnString = string.Empty;
+
+    if (index > 0)
+        returnString = input.Substring(index, input.Length - index);
+    else
+        returnString = input;
+
+    return returnString;
+}
+
+
+//testing
 fileExtension.Sort();
 
 foreach (var file in fileExtension)
     Console.WriteLine(file);
+
