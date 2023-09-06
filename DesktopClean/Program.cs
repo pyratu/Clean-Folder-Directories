@@ -11,12 +11,18 @@
             string[] Directories = Directory.GetDirectories(fromPath);
             string[] both = files.Concat(Directories).ToArray();
 
+            Console.Write("Type the extension you want to ignore splited by \", \" \n(Ex: .zip, .exe, .jpeg) \n If you dont have any extension press enter\n");
+            string inputExtensionIgnore = Console.ReadLine().ToLower();
+            if (inputExtensionIgnore.Length == 0)
+                inputExtensionIgnore = @"nothingtoseehere/\./nothingtoseehere";
+
             Console.Write("Type the files you want to ignore splited by \", \" \n(Ex: test1.zip, game.exe, photo.jpeg) \n If you dont have any files press enter\n");
             string inputFileIgnore = Console.ReadLine().ToLower();
             if (inputFileIgnore.Length == 0)
                 inputFileIgnore = @"nothingtoseehere/\./nothingtoseehere";
 
             string[] filesToIgnore = IgnoredFiles(inputFileIgnore);
+            string[] extensionsToIgnore = IgnoredFiles(inputExtensionIgnore);
 
             Thread.Sleep(2500);
 
@@ -40,11 +46,16 @@
             foreach (string file in both)
             {
                 string fileCheckForIgnore = file;
+                string extensionCheckForIgnore = file;
                 if (file.Contains(fromPath + @"\"))
-                    fileCheckForIgnore = file.Replace(fromPath + @"\", "");
+                fileCheckForIgnore = file.Replace(fromPath + @"\", "");
+
+
+                extensionCheckForIgnore = file.Replace(fromPath + @"\", "");
+                extensionCheckForIgnore = GetToThePoint(extensionCheckForIgnore);
+
                 
-                
-                if (filesToIgnore.Contains(fileCheckForIgnore) == false)
+                if (filesToIgnore.Contains(fileCheckForIgnore) == false && extensionsToIgnore.Contains(extensionCheckForIgnore) == false)
                 {
                    //sets cursor and writes number of elements at top left screen
                    WriteAt();
@@ -130,6 +141,7 @@
 
                 return filezToIgnore;
             }
+
 
             bool CheckIfDirectory(string input)
             {
