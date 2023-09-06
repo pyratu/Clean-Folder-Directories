@@ -5,14 +5,13 @@
         static void Main(string[] args)
         {
             string folderDirPath = @"C:\New folder\Folders";
- 
 
             string fromPath = @"C:\test";
             string[] files = Directory.GetFiles(fromPath);
             string[] Directories = Directory.GetDirectories(fromPath);
             string[] both = files.Concat(Directories).ToArray();
 
-            Console.Write("Type the files you want to ignore splited by \", \" \n(Ex: test1.zip, game.exe, photo.jpeg) \n If you dont have any files press enter");
+            Console.Write("Type the files you want to ignore splited by \", \" \n(Ex: test1.zip, game.exe, photo.jpeg) \n If you dont have any files press enter\n");
             string inputFileIgnore = Console.ReadLine().ToLower();
             if (inputFileIgnore.Length == 0)
                 inputFileIgnore = @"nothingtoseehere/\./nothingtoseehere";
@@ -23,7 +22,7 @@
 
             List<string> fileExtension = new List<string>();
             decimal totalSize = CalculateFolderSize(fromPath);
-            int numberOfElements = files.Length;
+            int numberOfElements = both.Length;
 
             int origRow = Console.CursorLeft;
             int origCol = Console.CursorTop;
@@ -31,8 +30,8 @@
             int maxNumberWidth = numberOfElements.ToString().Length;
             string message = "Number of elements remained: ";
 
-            //Console.SetCursorPosition(origRow, origCol);
-            //Console.Write(message);
+            Console.SetCursorPosition(origRow, origCol);
+            Console.Write(message);
 
             origRow += message.Length;
 
@@ -44,18 +43,12 @@
                 if (file.Contains(fromPath + @"\"))
                     fileCheckForIgnore = file.Replace(fromPath + @"\", "");
                 
-                Console.WriteLine(fileCheckForIgnore);
+                
                 if (filesToIgnore.Contains(fileCheckForIgnore) == false)
                 {
-                    
-                    
-                    //sets cursor and writes number of elements at top left screen
-                    //WriteAt();
-               /*     Console.WriteLine(file);
-                    FileInfo fileInfo = new FileInfo(file);
-                    totalSize = totalSize + fileInfo.Length;*/
-
-                    
+                   //sets cursor and writes number of elements at top left screen
+                   WriteAt();
+                   
 
                     string str = file.Replace(fromPath + @"\", "");
                     AddToList(str, str.Length);
@@ -73,7 +66,6 @@
 
                 if(filesToIgnore.Contains(fileCheckForIgnore) == false)
                     MoveFolders(file);
-
             }
 
             // method that adds extensions (.torrent) to a list
@@ -110,7 +102,7 @@
 
             decimal sizeMB = totalSize / 1000 / 1000;
             decimal sizeGB = totalSize / (1024 * 1024 * 1024);
-            Console.WriteLine("Total size: " + sizeMB.ToString("0.00") + " MB" + "\n\tOR\n" + "Total size: " + sizeGB.ToString("0.00") + " GB\n");
+            Console.WriteLine("\nTotal size: " + sizeMB.ToString("0.00") + " MB" + "\n\tOR\n" + "Total size: " + sizeGB.ToString("0.00") + " GB\n");
 
             void WriteAt()
             {
