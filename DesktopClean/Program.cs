@@ -4,22 +4,25 @@
     {
         static void Main(string[] args)
         {
-            string test = "";
-            string path = @"C:\Users\paul_\Desktop";
-            string[] files = Directory.GetFiles(path);
+            string folderDirPath = @"C:\New folder\Folders";
+ 
 
-            bool fileIgnored = false;
-            Console.Write("Type the files you want to ignore splited by \", \" \n(Ex: test1.zip, game.exe, photo.jpeg) \n");
+            string fromPath = @"C:\test";
+            string[] files = Directory.GetFiles(fromPath);
+            string[] Directories = Directory.GetDirectories(fromPath);
+            string[] both = files.Concat(Directories).ToArray();
+
+            Console.Write("Type the files you want to ignore splited by \", \" \n(Ex: test1.zip, game.exe, photo.jpeg) \n If you dont have any files press enter");
             string inputFileIgnore = Console.ReadLine().ToLower();
+            if (inputFileIgnore.Length == 0)
+                inputFileIgnore = @"nothingtoseehere/\./nothingtoseehere";
 
             string[] filesToIgnore = IgnoredFiles(inputFileIgnore);
 
-            Console.WriteLine(fileIgnored);
-
-            Thread.Sleep(5000);
+            Thread.Sleep(2500);
 
             List<string> fileExtension = new List<string>();
-            decimal totalSize = 0;
+            decimal totalSize = CalculateFolderSize(fromPath);
             int numberOfElements = files.Length;
 
             int origRow = Console.CursorLeft;
@@ -28,39 +31,48 @@
             int maxNumberWidth = numberOfElements.ToString().Length;
             string message = "Number of elements remained: ";
 
-            Console.SetCursorPosition(origRow, origCol);
-            Console.Write(message);
+            //Console.SetCursorPosition(origRow, origCol);
+            //Console.Write(message);
 
             origRow += message.Length;
 
             //takes every file name from desktop files, gets the extension only (ex: ".torrent"), creates folders with file extension name
             //and copy file to specified extension folder
-            foreach (string file in files)
+            foreach (string file in both)
             {
-                string fileCheckForIgnore = file.Replace(path + @"\", "");
+                string fileCheckForIgnore = file;
+                if (file.Contains(fromPath + @"\"))
+                    fileCheckForIgnore = file.Replace(fromPath + @"\", "");
+                
+                Console.WriteLine(fileCheckForIgnore);
                 if (filesToIgnore.Contains(fileCheckForIgnore) == false)
                 {
+                    
+                    
                     //sets cursor and writes number of elements at top left screen
-                    WriteAt();
-
+                    //WriteAt();
+               /*     Console.WriteLine(file);
                     FileInfo fileInfo = new FileInfo(file);
-                    totalSize = totalSize + fileInfo.Length;
+                    totalSize = totalSize + fileInfo.Length;*/
 
-                    string str = file.Replace(path + @"\", "");
+                    
+
+                    string str = file.Replace(fromPath + @"\", "");
                     AddToList(str, str.Length);
 
                     string dir = @$"C:\New folder\{fileExtension.Last()}_Files";
 
                     //checks if directory exists at specified path, if not create new directory
-                    if (!Directory.Exists(dir))
+                    if (!CheckIfDirectory(file) && !Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
 
                     //checks if file exists at the specified path, if not copy the file
-                    if (!File.Exists(dir + "\\" + str))
+                    if (!CheckIfDirectory(file) && !File.Exists(dir + "\\" + str))
                         File.Copy(file, dir + "\\" + str);
                 }
-                else
-                    test = test +" "+ file;
+
+                if(filesToIgnore.Contains(fileCheckForIgnore) == false)
+                    MoveFolders(file);
 
             }
 
@@ -99,12 +111,6 @@
             decimal sizeMB = totalSize / 1000 / 1000;
             decimal sizeGB = totalSize / (1024 * 1024 * 1024);
             Console.WriteLine("Total size: " + sizeMB.ToString("0.00") + " MB" + "\n\tOR\n" + "Total size: " + sizeGB.ToString("0.00") + " GB\n");
-            
-            //testing
-            fileExtension.Sort();
-
-            foreach (var file in fileExtension)
-                Console.WriteLine(file);
 
             void WriteAt()
             {
@@ -122,16 +128,74 @@
 
             string[] IgnoredFiles(string input)
             {
-                input = input.Trim();
-                string[] filesToIgnore = input.Split(", ");
-                if (filesToIgnore.Length > 0)
-                    fileIgnored = true;
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    return null; 
+                }
 
-                return filesToIgnore;
+                input = input.Trim();
+                string[] filezToIgnore = input.Split(", ");
+
+                return filezToIgnore;
             }
+
+            bool CheckIfDirectory(string input)
+            {
+                FileAttributes attr = File.GetAttributes(input);
+
+                if (attr.HasFlag(FileAttributes.Directory))
+                    return true;
+                else
+                    return false;
+            }
+            
+            //moves folder to specified path
+            void MoveFolders(string input)
+            {
+                if (!Directory.Exists(folderDirPath))
+                    Directory.CreateDirectory(folderDirPath);
+
+                if (CheckIfDirectory(input))
+                {
+                    string[] Directories = Directory.GetDirectories(fromPath);
+
+                    if (!Directory.Exists(folderDirPath))
+                    {
+                        Directory.CreateDirectory(folderDirPath);
+
+                    }
+
+                    foreach (string dir in Directories)
+                    {
+                        if (Directory.Exists(dir))
+                        {
+                            string foldername = Path.GetFileName(dir);
+                            try
+                            {
+                                Directory.Move(dir, folderDirPath + "\\" + foldername);
+                            }
+                            catch (IOException exp)
+                            {
+                                Console.WriteLine(exp.Message);
+                            }
+                        }
+                        else
+                            Directory.Move(dir, folderDirPath);
+                    }
+                }
+            }
+        }
+        static long CalculateFolderSize(string folderPath)
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(folderPath);
+
+            // Calculate the size of all files in the current directory
+            long totalSize = directoryInfo.EnumerateFiles().Sum(file => file.Length);
+
+            // Calculate the size of all subdirectories (recursive call)
+            totalSize += directoryInfo.EnumerateDirectories().Sum(subdirectory => CalculateFolderSize(subdirectory.FullName));
+
+            return totalSize;
         }
     }
 }
-
-
-
