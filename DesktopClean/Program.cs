@@ -13,8 +13,10 @@
             int second = today.Second;
             string todayDate = today.Year + "-" + today.Month + "-" + today.Day + " " + today.Hour + "-" + today.Minute + "-" + today.Second + " ";
 
-            string fromPath = @"C:\test"; // CHANGE HERE
-            string toPath = @"C:\New folder"; // CHANGE HERE 
+            Console.Write(@"Path to clean ( C:\test ): ");
+            string fromPath = @Console.ReadLine();
+            Console.Write(@"Path to move everything ( C:\Moveto ): ");
+            string toPath = @Console.ReadLine(); 
 
             decimal totalSize = CalculateFolderSize(fromPath);
 
@@ -58,7 +60,6 @@
             //and copy file to specified extension folder ********file = C:\test\New WinRAR ZIP archive.zip******
             foreach (string file in both)
             {
-                WriteAt();
                 string extensionName = @"NothingToSeeHere/.\";
                 string fileName = @"NothingToSeeHere/.\";
 
@@ -92,6 +93,7 @@
                         File.Move(file, toPath +@"\"+ extensionName.Replace(".", "") + @"_Files\"+fileName);
                     }
                 }
+                WriteAt();
             }
 
             decimal sizeMB = totalSize / 1000 / 1000;
