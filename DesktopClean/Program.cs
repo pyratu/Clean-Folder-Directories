@@ -10,10 +10,11 @@
             int day = today.Day; 
             int hour = today.Hour; 
             int minute = today.Minute; 
-            int second = today.Second; 
+            int second = today.Second;
+            string todayDate = today.Year + "-" + today.Month + "-" + today.Day + " " + today.Hour + "-" + today.Minute + "-" + today.Second + " ";
 
-            string fromPath = @"C:\test";
-            string toPath = @"C:\New folder";
+            string fromPath = @"C:\test"; // CHANGE HERE
+            string toPath = @"C:\New folder"; // CHANGE HERE 
 
             decimal totalSize = CalculateFolderSize(fromPath);
 
@@ -26,7 +27,7 @@
             if (inputExtensionIgnore.Length == 0)
                 inputExtensionIgnore = @"nothingtoseehere/\./nothingtoseehere";
 
-            Console.Write("Type the files you want to ignore splited by \", \" \n(Ex: test1.zip, game.exe, photo.jpeg) \n If you dont have any files press enter\n");
+            Console.Write("\nType the files you want to ignore splited by \", \" \n(Ex: test1.zip, game.exe, photo.jpeg) \n If you dont have any files press enter\n");
             string inputFileIgnore = Console.ReadLine().ToLower();
             if (inputFileIgnore.Length == 0)
                 inputFileIgnore = @"nothingtoseehere/\./nothingtoseehere";
@@ -36,8 +37,6 @@
             List<string> ignoreAll = new List<string>();
             ignoreAll.AddRange(filesToIgnore);
             ignoreAll.AddRange(extensionsToIgnore);
-
-            Thread.Sleep(2500);
 
             List<string> fileExtension = new List<string>();
            
@@ -49,6 +48,7 @@
             int maxNumberWidth = numberOfElements.ToString().Length;
             string message = "Number of elements remained: ";
 
+            Console.WriteLine();
             Console.SetCursorPosition(origRow, origCol);
             Console.Write(message);
 
@@ -80,7 +80,7 @@
                         Directory.CreateDirectory(toPath + @"\"+extensionName.Replace(".", "") + "_Files");
                         if(File.Exists(toPath + @"\" + extensionName.Replace(".", "") + @"_Files\" + fileName))
                         {
-                            File.Move(file, toPath + @"\" + extensionName.Replace(".", "") + @"_Files\" + fileName + " moved on " + today.Year + "-" + today.Month + "-" + today.Day + " " + today.Hour + "-" + today.Minute + "-" + today.Second + extensionName);
+                            File.Move(file, toPath + @"\" + extensionName.Replace(".", "") + @"_Files\" + fileName + " moved on " + todayDate + extensionName);
                         }
                         else
                         {
@@ -94,24 +94,11 @@
                 }
             }
 
-            //returns extension -> .torrent
-            string GetToThePoint(string input)
-            {
-                var index = input.LastIndexOf('.');
-                string returnString = string.Empty;
-
-                if (index > 0)
-                    returnString = input.Substring(index, input.Length - index);
-                else
-                    returnString = input;
-
-                return returnString;
-            }
-
             decimal sizeMB = totalSize / 1000 / 1000;
             decimal sizeGB = totalSize / (1024 * 1024 * 1024);
             Console.WriteLine("\nTotal size: " + sizeMB.ToString("0.00") + " MB" + "\n\tOR\n" + "Total size: " + sizeGB.ToString("0.00") + " GB\n");
 
+            Console.ReadLine();
             void WriteAt()
             {
                 Console.SetCursorPosition(origRow, origCol);
@@ -129,10 +116,8 @@
             string[] IgnoredFiles(string input)
             {
                 if (string.IsNullOrWhiteSpace(input))
-                {
                     return null; 
-                }
-
+                
                 input = input.Trim();
                 string[] filezToIgnore = input.Split(", ");
 
@@ -142,18 +127,12 @@
             bool CheckIfDirectory(string input)
             {
                 FileAttributes attr = File.GetAttributes(input);
-
-                if (attr.HasFlag(FileAttributes.Directory))
-                    return true;
-                else
-                    return false;
+                return attr.HasFlag(FileAttributes.Directory);
             }
             
             //moves folder to specified path
             void MoveFolders(string fileName, string file)
             {
-                
-      
                 if (!Directory.Exists(toPath + @"\" + "Folder"))
                 {
                     Directory.CreateDirectory(toPath + @"\" + "Folder");
@@ -161,7 +140,7 @@
 
                 if (Directory.Exists(toPath + @"\" + @"Folder\" + fileName))
                 {
-                    Directory.Move(file, toPath + @"\Folder\" + fileName + " moved on " + today.Year + "-" + today.Month + "-" + today.Day + " " + today.Hour + "-" + today.Minute + "-" + today.Second);
+                    Directory.Move(file, toPath + @"\Folder\" + fileName + " moved on " + todayDate.TrimEnd());
                 }
                 else
                 {
