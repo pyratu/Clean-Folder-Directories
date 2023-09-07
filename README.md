@@ -7,7 +7,7 @@ Clean Folder / Directories is the solution to declutter your desktop. This C# sc
 - ~~Ignore specified extensions~~ ✅
 - ~~Add total files size and file count.~~ ✅
 ## 🔧 How It Works
-1) Change fromPath and toPath to the path you intend to clean(fromPath) and the path to have all files copied to(toPath).
+1) Change fromPath and toPath to the path you intend to clean(fromPath) and the path to have all files copied to(toPath) [Only inside the code].
 - string fromPath = @"C:\test";
 - string toPath = @"C:\New folder";
 2) Set ignored files and ignored extensions
