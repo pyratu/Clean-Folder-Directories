@@ -7,11 +7,14 @@ Clean Folder / Directories is the solution to declutter your desktop. This C# sc
 - ~~Ignore specified extensions~~ ✅
 - ~~Add total files size and file count.~~ ✅
 ## 🔧 How It Works
-1) Set the from path and to path
-2) Set ignored files and ignored extensions
-3) Script scans your desktop for scattered files.
-4) It creates folders named after each file extension.
-5) Your files are moved(atm only copied for testing) to their respective extension folders.
+1) Change fromPath and toPath to the path you intend to clean(fromPath) and the path to have all files copied to(toPath).
+- string fromPath = @"C:\test";
+- string toPath = @"C:\New folder";
+2) Set the from path and to path
+3) Set ignored files and ignored extensions
+4) Script scans your desktop for scattered files.
+5) It creates folders named after each file extension.
+6) Your files are moved(atm only copied for testing) to their respective extension folders.
 ## 💡 Usage
 Change the path variable to specify the directory you want to clean. Run the script!
 ## 🧨 Contributions
