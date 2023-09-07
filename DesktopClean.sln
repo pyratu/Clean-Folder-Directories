@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopClean", "DesktopClean\DesktopClean.csproj", "{22BB4802-B54F-4BC5-922C-A498D4D03318}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FolderClean", "DesktopClean\FolderClean.csproj", "{22BB4802-B54F-4BC5-922C-A498D4D03318}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

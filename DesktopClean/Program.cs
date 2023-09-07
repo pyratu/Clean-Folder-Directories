@@ -1,4 +1,4 @@
-﻿namespace DesktopClean
+﻿namespace FolderClean
 {
     class Program
     {
